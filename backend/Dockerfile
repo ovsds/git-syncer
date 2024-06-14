@@ -15,6 +15,13 @@ RUN poetry install
 
 FROM ${BASE_RUNTIME_IMAGE} AS runtime
 
+RUN apt-get update \
+    && apt-get upgrade --yes \
+    && apt-get install --yes \
+    --no-install-recommends \
+    git \
+    && rm -rf /var/lib/apt/lists/*
+
 RUN mkdir --parents /opt/app
 COPY --from=builder /opt/app/.venv /opt/app/.venv
 COPY bin /opt/app/bin
@@ -27,15 +34,10 @@ FROM builder as builder_dev
 
 RUN poetry install --with dev
 
-FROM ${BASE_RUNTIME_IMAGE} as runtime_dev
+FROM runtime as runtime_dev
 
-RUN mkdir --parents /opt/app
 COPY --from=builder_dev /opt/app/.venv /opt/app/.venv
-COPY bin /opt/app/bin
-COPY lib /opt/app/lib
 COPY pyproject.toml /opt/app/pyproject.toml
-
-WORKDIR /opt/app
 
 FROM runtime_dev AS tests
 
