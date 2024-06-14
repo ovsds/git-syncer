@@ -185,7 +185,7 @@ tasks:
 
       - echo 'Running container...'
       - docker run
-        --volume ./examples/simple.yaml:/settings.yaml
+        --volume ./examples/settings.yaml:/settings.yaml
         --env GIT_SYNCER_SETTINGS_YAML=/settings.yaml
         --env GITHUB_USER
         --env GITHUB_PASSWORD
