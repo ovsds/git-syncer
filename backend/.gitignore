@@ -9,6 +9,3 @@ __pycache__/
 # Coverage reports
 /.coverage
 htmlcov/
-
-# Local app state
-example/state
