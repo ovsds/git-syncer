@@ -185,6 +185,12 @@ tasks:
 
       - echo 'Running container...'
       - docker run
+        --volume ./examples/simple.yaml:/settings.yaml
+        --env GIT_SYNCER_SETTINGS_YAML=/settings.yaml
+        --env GITHUB_USER
+        --env GITHUB_PASSWORD
+        --env GITEA_USER
+        --env GITEA_PASSWORD
         {{.IMAGE_NAME}}:runtime
 
   ci-init:
