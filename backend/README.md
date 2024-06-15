@@ -82,36 +82,36 @@ Can be set by `GIT_SYNCER_SCHEDULER__EXECUTOR_MAX_WORKERS` environment variable.
 
 ---
 
-`scheduler.delay_timeout` - delay between iterations in seconds. Default is `300`.
+`scheduler.success_delay` - delay between iterations in seconds. Default is `300`.
 
 ```yaml
 scheduler:
-  delay_timeout: 60
+  success_delay: 60
 ```
 
-Can be set by `GIT_SYNCER_SCHEDULER__DELAY_TIMEOUT` environment variable.
+Can be set by `GIT_SYNCER_SCHEDULER__SUCCESS_DELAY` environment variable.
 
 ---
 
-`scheduler.retry_timeout` - delay between failed iterations in seconds. Default is `60`.
+`scheduler.retry_delay` - delay between failed iterations in seconds. Default is `60`.
 
 ```yaml
 scheduler:
-  retry_timeout: 60
+  retry_delay: 60
 ```
 
-Can be set by `GIT_SYNCER_SCHEDULER__RETRY_TIMEOUT` environment variable.
+Can be set by `GIT_SYNCER_SCHEDULER__retry_delay` environment variable.
 
 ---
 
-`scheduler.timeout` - maximum time to run in seconds. Default is `0`. `0` means no timeout.
+`scheduler.total_timeout` - maximum time to run in seconds. Default is `0`. `0` means no timeout.
 
 ```yaml
 scheduler:
-  timeout: 600
+  total_timeout: 600
 ```
 
-Can be set by `GIT_SYNCER_SCHEDULER__TIMEOUT` environment variable.
+Can be set by `GIT_SYNCER_SCHEDULER__TOTAL_TIMEOUT` environment variable.
 
 ---
 

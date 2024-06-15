@@ -49,8 +49,8 @@ class Application:
                 git_tasks.GitSyncRepoJob(
                     task=repo.to_dataclass,
                     executor=executor,
-                    delay_timeout=settings.scheduler.delay_timeout,
-                    retry_timeout=settings.scheduler.retry_timeout,
+                    success_delay=settings.scheduler.success_delay,
+                    retry_delay=settings.scheduler.retry_delay,
                     one_time=settings.scheduler.one_time,
                 )
             )
@@ -108,7 +108,7 @@ class Application:
             raise app_errors.ServerRuntimeError("Application runtime error") from unexpected_error
 
     async def _start(self) -> None:
-        timer = asyncio_utils.TimeoutTimer(timeout=self._settings.scheduler.timeout)
+        timer = asyncio_utils.TimeoutTimer(timeout=self._settings.scheduler.total_timeout)
 
         while not timer.is_expired:
             if self._aiojobs_scheduler.is_empty:

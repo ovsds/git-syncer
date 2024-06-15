@@ -26,13 +26,13 @@ class RepeatableJob(JobBase):
     def __init__(
         self,
         executor: concurrent.futures.Executor,
-        delay_timeout: float,
-        retry_timeout: float,
+        success_delay: float,
+        retry_delay: float,
         logger: logging_utils.AbstractLogger,
     ) -> None:
         self._executor = executor
-        self._delay_timeout = delay_timeout
-        self._retry_timeout = retry_timeout
+        self._success_delay = success_delay
+        self._retry_delay = retry_delay
         self._logger = logger
 
         self._finished = False
@@ -52,12 +52,12 @@ class RepeatableJob(JobBase):
                 self._logger.exception(
                     "Job %r has been crashed, it will be retried after %.1f seconds",
                     self.name,
-                    self._retry_timeout,
+                    self._retry_delay,
                 )
                 if self._finished:
                     self._logger.info("Job %r has been finished", self.name)
                     return
-                await asyncio.sleep(self._retry_timeout)
+                await asyncio.sleep(self._retry_delay)
             else:
                 if self._finished:
                     self._logger.info("Job %r has been finished", self.name)
@@ -65,9 +65,9 @@ class RepeatableJob(JobBase):
                 self._logger.info(
                     "Job %r finished successfully, it will be repeted after %.1f seconds",
                     self.name,
-                    self._delay_timeout,
+                    self._success_delay,
                 )
-                await asyncio.sleep(self._delay_timeout)
+                await asyncio.sleep(self._success_delay)
 
     def finish(self) -> None:
         self._finished = True
