@@ -82,36 +82,80 @@ Can be set by `GIT_SYNCER_SCHEDULER__EXECUTOR_MAX_WORKERS` environment variable.
 
 ---
 
-`scheduler.delay_timeout` - delay between iterations in seconds. Default is `300`.
+`scheduler.startup_delay` - delay before first iteration in seconds. Default is `0`.
 
 ```yaml
 scheduler:
-  delay_timeout: 60
+  startup_delay: 60
 ```
 
-Can be set by `GIT_SYNCER_SCHEDULER__DELAY_TIMEOUT` environment variable.
+Can be set by `GIT_SYNCER_SCHEDULER__STARTUP_DELAY` environment variable.
 
 ---
 
-`scheduler.retry_timeout` - delay between failed iterations in seconds. Default is `60`.
+`scheduler.success_delay` - delay between iterations in seconds. Default is `300`.
 
 ```yaml
 scheduler:
-  retry_timeout: 60
+  success_delay: 60
 ```
 
-Can be set by `GIT_SYNCER_SCHEDULER__RETRY_TIMEOUT` environment variable.
+Can be set by `GIT_SYNCER_SCHEDULER__SUCCESS_DELAY` environment variable.
 
 ---
 
-`scheduler.timeout` - maximum time to run in seconds. Default is `0`. `0` means no timeout.
+`scheduler.retry_delay` - delay between failed iterations in seconds. Default is `60`.
 
 ```yaml
 scheduler:
-  timeout: 600
+  retry_delay: 60
 ```
 
-Can be set by `GIT_SYNCER_SCHEDULER__TIMEOUT` environment variable.
+Can be set by `GIT_SYNCER_SCHEDULER__retry_delay` environment variable.
+
+---
+
+`scheduler.startup_jitter` - startup delay jitter in seconds. Default is `5`.
+
+```yaml
+scheduler:
+  startup_jitter: 5
+```
+
+Can be set by `GIT_SYNCER_SCHEDULER__STARTUP_JITTER` environment variable.
+
+---
+
+`scheduler.success_jitter` - success delay jitter in seconds. Default is `30`.
+
+```yaml
+scheduler:
+  success_jitter: 30
+```
+
+Can be set by `GIT_SYNCER_SCHEDULER__SUCCESS_JITTER` environment variable.
+
+---
+
+`scheduler.retry_jitter` - retry delay jitter in seconds. Default is `10`.
+
+```yaml
+scheduler:
+  retry_jitter: 10
+```
+
+Can be set by `GIT_SYNCER_SCHEDULER__RETRY_JITTER` environment variable.
+
+---
+
+`scheduler.total_timeout` - maximum time to run in seconds. Default is `0`. `0` means no timeout.
+
+```yaml
+scheduler:
+  total_timeout: 600
+```
+
+Can be set by `GIT_SYNCER_SCHEDULER__TOTAL_TIMEOUT` environment variable.
 
 ---
 
