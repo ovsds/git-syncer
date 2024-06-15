@@ -14,8 +14,12 @@ class GitSyncRepoJob(aiojobs_utils.RepeatableJob):
         self,
         task: git_utils.SyncRepoTask,
         executor: concurrent.futures.Executor,
-        success_delay: int,
-        retry_delay: int,
+        startup_delay: float,
+        success_delay: float,
+        retry_delay: float,
+        startup_jitter: float,
+        success_jitter: float,
+        retry_jitter: float,
         one_time: bool = False,
     ):
         self._task = task
@@ -24,8 +28,12 @@ class GitSyncRepoJob(aiojobs_utils.RepeatableJob):
 
         super().__init__(
             executor=executor,
+            startup_delay=startup_delay,
             success_delay=success_delay,
             retry_delay=retry_delay,
+            startup_jitter=startup_jitter,
+            success_jitter=success_jitter,
+            retry_jitter=retry_jitter,
             logger=logging_utils.PrefixAdapter(
                 prefix=f"GitSyncRepoJob[{self._id}] ",
                 logger=logging.getLogger(__name__),

@@ -82,6 +82,17 @@ Can be set by `GIT_SYNCER_SCHEDULER__EXECUTOR_MAX_WORKERS` environment variable.
 
 ---
 
+`scheduler.startup_delay` - delay before first iteration in seconds. Default is `0`.
+
+```yaml
+scheduler:
+  startup_delay: 60
+```
+
+Can be set by `GIT_SYNCER_SCHEDULER__STARTUP_DELAY` environment variable.
+
+---
+
 `scheduler.success_delay` - delay between iterations in seconds. Default is `300`.
 
 ```yaml
@@ -101,6 +112,39 @@ scheduler:
 ```
 
 Can be set by `GIT_SYNCER_SCHEDULER__retry_delay` environment variable.
+
+---
+
+`scheduler.startup_jitter` - startup delay jitter in seconds. Default is `5`.
+
+```yaml
+scheduler:
+  startup_jitter: 5
+```
+
+Can be set by `GIT_SYNCER_SCHEDULER__STARTUP_JITTER` environment variable.
+
+---
+
+`scheduler.success_jitter` - success delay jitter in seconds. Default is `30`.
+
+```yaml
+scheduler:
+  success_jitter: 30
+```
+
+Can be set by `GIT_SYNCER_SCHEDULER__SUCCESS_JITTER` environment variable.
+
+---
+
+`scheduler.retry_jitter` - retry delay jitter in seconds. Default is `10`.
+
+```yaml
+scheduler:
+  retry_jitter: 10
+```
+
+Can be set by `GIT_SYNCER_SCHEDULER__RETRY_JITTER` environment variable.
 
 ---
 

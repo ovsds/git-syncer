@@ -35,8 +35,12 @@ class LoggingSettings(pydantic_settings.BaseSettings):
 class SchedulerSettings(pydantic_settings.BaseSettings):
     one_time: bool = False
     executor_max_workers: int | None = None
+    startup_delay: int = 0  # 0 seconds
     success_delay: int = 5 * 60  # 5 minutes
     retry_delay: int = 1 * 60  # 1 minute
+    startup_jitter: int = 5  # 5 seconds
+    success_jitter: int = 30  # 30 seconds
+    retry_jitter: int = 10  # 10 seconds
     total_timeout: int = 0  # 10 minutes, 0 means no timeout
     close_timeout: int = 10
 

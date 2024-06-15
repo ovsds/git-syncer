@@ -49,8 +49,12 @@ class Application:
                 git_tasks.GitSyncRepoJob(
                     task=repo.to_dataclass,
                     executor=executor,
+                    startup_delay=settings.scheduler.startup_delay,
                     success_delay=settings.scheduler.success_delay,
                     retry_delay=settings.scheduler.retry_delay,
+                    startup_jitter=settings.scheduler.startup_jitter,
+                    success_jitter=settings.scheduler.success_jitter,
+                    retry_jitter=settings.scheduler.retry_jitter,
                     one_time=settings.scheduler.one_time,
                 )
             )
