@@ -1,10 +1,13 @@
 import abc
 import asyncio
 import concurrent.futures
+import logging
 import random
 import typing
 
 import lib.utils.logging as logging_utils
+
+logger = logging.getLogger(__name__)
 
 
 class JobProtocol(typing.Protocol):
@@ -24,10 +27,19 @@ class JobBase(abc.ABC):
 
 
 async def _sleep_with_jitter(delay: float, jitter: float) -> None:
-    delay += random.uniform(-jitter, jitter)
+    if delay <= 0:
+        logger.warning("Delay is non-positive, setting it to 0.0")
+        delay = 0.0
 
-    if delay < 0:
-        return
+    if jitter <= 0:
+        logger.warning("Jitter is non-positive, setting it to 0.0")
+        jitter = 0.0
+
+    if jitter > delay:
+        logger.warning("Jitter is greater than delay, setting it equal to delay")
+        jitter = delay
+
+    delay += random.uniform(-jitter, jitter)
 
     await asyncio.sleep(delay)
 
