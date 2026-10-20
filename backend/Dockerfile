@@ -1,9 +1,9 @@
-ARG BASE_BUILDER_IMAGE=python:3.12.1
-ARG BASE_RUNTIME_IMAGE=python:3.12.1-slim
+ARG BASE_BUILDER_IMAGE=python:3.15.0
+ARG BASE_RUNTIME_IMAGE=python:3.15.0-slim
 
 FROM ${BASE_BUILDER_IMAGE} AS builder
 
-RUN python -m pip install 'poetry>=1.7.0,<1.8.0'
+RUN python -m pip install 'poetry==2.5.1'
 
 RUN mkdir --parents /opt/app
 COPY pyproject.toml /opt/app/pyproject.toml
