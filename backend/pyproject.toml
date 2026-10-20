@@ -95,6 +95,7 @@ extend-select = [
 ignore = [
   "F403", # 'from modle import *' used; unable to detect undefined names
   "F405", # 'from module import *' used; unable to detect undefined names
+  "PLR0402", # `import a.b as b` is the import style here
 ]
 
 [tool.tomlsort]

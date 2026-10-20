@@ -3,7 +3,7 @@ import logging.config as logging_config
 import sys
 import typing
 
-from lib.utils.logging import formatters
+import lib.utils.logging.formatters as logging_formatters
 
 LogLevel = typing.Literal["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"]
 
@@ -36,7 +36,7 @@ def create_config(
         },
         "formatters": {
             "default": {
-                "()": lambda: formatters.CustomFormatter(
+                "()": lambda: logging_formatters.CustomFormatter(
                     fmt=log_format,
                 ),
             },

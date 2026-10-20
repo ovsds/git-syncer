@@ -3,7 +3,7 @@ import logging
 import os
 import sys
 
-from lib import app
+import lib.app as app
 
 logger = logging.getLogger(__name__)
 
