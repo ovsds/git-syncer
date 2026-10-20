@@ -2,6 +2,19 @@
 build-backend = "poetry.core.masonry.api"
 requires = ["poetry-core>=2.0.0,<3.0.0"]
 
+[project]
+authors = [{ email = "github@ovsds.ru", name = "ovsds" }]
+dependencies = [
+  "aiojobs>=1.4.0,<2.0.0",
+  "gitpython>=3.2.1,<4.0.0",
+  "pydantic-settings[yaml]>=2.16.0,<3.0.0",
+  "pydantic>=2.14.1,<3.0.0",
+]
+description = "Git Syncer Backend"
+name = "git-syncer-backend"
+requires-python = ">=3.15,<3.16"
+version = "0.0.1"
+
 [tool.black]
 line-length = 120
 target-version = ["py315"]
@@ -27,17 +40,7 @@ profile = "black"
 py_version = 315
 
 [tool.poetry]
-authors = ["ovsds <github@ovsds.ru>"]
-description = "Git Syncer Backend"
-name = "git-syncer-backend"
-version = "0.0.1"
-
-[tool.poetry.dependencies]
-aiojobs = "^1.4.0"
-gitpython = "^3.2.1"
-pydantic = "^2.14.1"
-pydantic-settings = { extras = ["yaml"], version = "^2.16.0" }
-python = "~3.15"
+package-mode = false
 
 [tool.poetry.group.dev]
 optional = true

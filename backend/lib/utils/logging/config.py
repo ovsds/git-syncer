@@ -3,7 +3,7 @@ import logging.config as logging_config
 import sys
 import typing
 
-import lib.utils.logging.formatters as formatters
+from lib.utils.logging import formatters
 
 LogLevel = typing.Literal["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"]
 

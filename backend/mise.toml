@@ -23,7 +23,7 @@ run = [
   ".venv/bin/toml-sort --check {{vars.toml_files}}",
 
   "echo 'Running sort-all checks...'",
-  "find {{vars.source_folders}} -name '*.py' -exec .venv/bin/sort-all {} +",
+  "find {{vars.source_folders}} -name '*.py' -exec .venv/bin/sort-all --check {} +",
 
   "echo 'Running ruff checks...'",
   ".venv/bin/python -m ruff check {{vars.source_folders}}",
@@ -46,8 +46,7 @@ run = [
   ".venv/bin/toml-sort --in-place {{vars.toml_files}}",
 
   "echo 'Running sort-all fixes...'",
-  # sort-all exits non-zero whenever it rewrites a file
-  "find {{vars.source_folders}} -name '*.py' -exec .venv/bin/sort-all {} + || true",
+  "find {{vars.source_folders}} -name '*.py' -exec .venv/bin/sort-all --no-error-on-fix {} +",
 
   "echo 'Running ruff fixes...'",
   ".venv/bin/python -m ruff check --fix {{vars.source_folders}}",
@@ -95,7 +94,7 @@ description = "Build the Dockerfile target as a local git-syncer:<target> image"
 usage = 'arg "<target>" help="Dockerfile target, e.g. runtime or tests"'
 run = [
   "echo 'Building image {{usage.target}} target...'",
-  "docker build --tag {{vars.image_name}}:{{usage.target}} --target {{usage.target}} .",
+  "docker build --load --tag {{vars.image_name}}:{{usage.target}} --target {{usage.target}} .",
 ]
 
 [tasks.test-container]
