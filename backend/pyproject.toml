@@ -34,7 +34,7 @@ version = "0.0.1"
 
 [tool.poetry.dependencies]
 aiojobs = "^1.2.1"
-gitpython = "^3.2.1"
+gitpython = "^3.1.62"
 pydantic = "^2.7.4"
 pydantic-settings = {extras = ["yaml"], version = "^2.3.3"}
 python = "~3.12"
