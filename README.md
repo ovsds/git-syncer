@@ -1,5 +1,7 @@
 # Git Syncer
 
+[![CI](https://github.com/ovsds/git-syncer/workflows/Check%20PR/badge.svg)](https://github.com/ovsds/git-syncer/actions?query=workflow%3A%22%22Check+PR%22%22)
+
 Git Syncer is easy-to-use git repository mirror tool.
 Mirroring will create/update/delete refs in the target repository to match the source repository.
 WARNING: Never use repository with working data as target repository, it will be overwritten.
@@ -38,11 +40,13 @@ more information can be found in [backend/README.md](backend/README.md#Settings)
 
 ### Global dependencies
 
-- node
+- [mise](https://mise.jdx.dev/installing-mise.html), activated in the shell (`eval "$(mise activate zsh)"`)
 
-### Taskfile commands
+All other tools are pinned in [mise.toml](mise.toml).
 
-For all commands see [Taskfile](Taskfile.yaml) or `task --list-all`.
+### mise tasks
+
+For all commands see [mise.toml](mise.toml), [backend/mise.toml](backend/mise.toml) or `mise tasks ls`.
 
 ## License
 

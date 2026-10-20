@@ -1,0 +1,155 @@
+[vars]
+source_folders = "bin lib tests"
+toml_files = "pyproject.toml poetry.toml"
+image_name = "git-syncer"
+
+[tasks.init]
+description = "Initialize backend environment"
+run = [
+  "echo 'Installing python dependencies...'",
+  "poetry install --no-root --with dev",
+]
+
+[tasks.lint]
+description = "Lint backend"
+run = [
+  "echo 'Running poetry checks...'",
+  "poetry check --lock",
+
+  "echo 'Running black checks...'",
+  ".venv/bin/python -m black --check .",
+
+  "echo 'Running toml-sort checks...'",
+  ".venv/bin/toml-sort --check {{vars.toml_files}}",
+
+  "echo 'Running sort-all checks...'",
+  "find {{vars.source_folders}} -name '*.py' -exec .venv/bin/sort-all {} +",
+
+  "echo 'Running ruff checks...'",
+  ".venv/bin/python -m ruff check {{vars.source_folders}}",
+
+  "echo 'Running pyright checks...'",
+  "../node_modules/.bin/pyright",
+]
+
+[tasks.lint-fix]
+description = "Lint fix backend"
+run = [
+  "echo 'Running poetry fixes...'",
+  "poetry lock",
+  "poetry check",
+
+  "echo 'Running black fixes...'",
+  ".venv/bin/python -m black --safe .",
+
+  "echo 'Running toml-sort fixes...'",
+  ".venv/bin/toml-sort --in-place {{vars.toml_files}}",
+
+  "echo 'Running sort-all fixes...'",
+  # sort-all exits non-zero whenever it rewrites a file
+  "find {{vars.source_folders}} -name '*.py' -exec .venv/bin/sort-all {} + || true",
+
+  "echo 'Running ruff fixes...'",
+  ".venv/bin/python -m ruff check --fix {{vars.source_folders}}",
+
+  "echo 'Running pyright checks...'",
+  "../node_modules/.bin/pyright",
+]
+
+[tasks.test]
+description = "Test backend"
+run = [
+  "echo 'Running pytest...'",
+  ".venv/bin/python -m pytest tests",
+]
+
+[tasks.clean]
+description = "Clean backend environment"
+run = [
+  "echo 'Cleaning python dependencies...'",
+  "rm -rf .venv",
+
+  "echo 'Cleaning pytest and ruff caches...'",
+  "rm -rf .pytest_cache .ruff_cache",
+
+  "echo 'Cleaning coverage results...'",
+  "rm -rf .coverage htmlcov",
+]
+
+[tasks.dependencies-update]
+description = "Update backend dependencies"
+run = [
+  "echo 'Updating python dependencies...'",
+  "poetry update",
+]
+
+[tasks.dependencies-check]
+description = "Check backend dependencies"
+run = [
+  "echo 'Checking python dependencies...'",
+  "poetry show --outdated",
+]
+
+[tasks.image-build]
+description = "Build the Dockerfile target as a local git-syncer:<target> image"
+usage = 'arg "<target>" help="Dockerfile target, e.g. runtime or tests"'
+run = [
+  "echo 'Building image {{usage.target}} target...'",
+  "docker build --tag {{vars.image_name}}:{{usage.target}} --target {{usage.target}} .",
+]
+
+[tasks.test-container]
+description = "Test backend in container"
+run = [
+  { task = "image-build tests" },
+
+  "echo 'Running tests...'",
+  "docker run --rm {{vars.image_name}}:tests",
+]
+
+[tasks.test-coverage-run]
+description = "Test backend with coverage"
+run = [
+  "echo 'Running test coverage...'",
+  ".venv/bin/python -m coverage run -m pytest tests",
+]
+
+[tasks.test-coverage-report]
+description = "Show test coverage report"
+run = [
+  "echo 'Reporting test coverage...'",
+  ".venv/bin/python -m coverage report -m",
+]
+
+[tasks.test-coverage-html]
+description = "Show test coverage report in browser"
+run = [
+  "echo 'Generating test coverage report...'",
+  ".venv/bin/python -m coverage html",
+  '.venv/bin/python -m webbrowser -t "file://$(pwd)/htmlcov/index.html"',
+]
+
+[tasks.dev-server-start]
+description = "Start development application"
+run = [
+  "echo 'Starting server...'",
+  ".venv/bin/python -m bin.main",
+]
+
+[tasks.dev-server-container-start]
+description = "Start development application in container with examples/settings.yaml"
+run = [
+  { task = "image-build runtime" },
+
+  "echo 'Running container...'",
+  '''
+  docker run --rm \
+    --volume ./examples/settings.yaml:/settings.yaml \
+    --env GIT_SYNCER_SETTINGS_YAML=/settings.yaml \
+    --env GITHUB_USER \
+    --env GITHUB_PASSWORD \
+    --env GITEA_USER \
+    --env GITEA_PASSWORD \
+    {{vars.image_name}}:runtime
+  ''',
+]

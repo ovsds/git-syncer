@@ -1,0 +1,80 @@
+name: Release PR
+
+on:
+  pull_request:
+    types:
+      - opened
+      - reopened
+      - synchronize
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.number }}
+  cancel-in-progress: true
+
+jobs:
+  release-pr:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      pull-requests: write
+      packages: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Setup Environment
+        uses: $/.github/actions/setup_environment
+
+      - name: Get Image Data
+        id: get-image-data
+        run: |
+          {
+            echo "registry=ghcr.io"
+            echo "name=${{ github.repository }}-beta"
+            echo "tag=${{ github.event.number }}-${{ github.run_id }}-${{ github.run_attempt }}"
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@dbcb813823bdd20940b903addbd779551569679f # v4.6.0
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Configure Docker Builder
+        run: mise run configure-builder
+
+      - name: Build image
+        env:
+          IMAGE_REGISTRY: ${{ steps.get-image-data.outputs.registry }}
+          IMAGE_NAME: ${{ steps.get-image-data.outputs.name }}
+          IMAGE_TAG: ${{ steps.get-image-data.outputs.tag }}
+        run: |
+          mise run ci-image-push
+
+      - name: Scan image
+        id: scan
+        uses: ovsds/run-with-output-action@9bc0dcb1df5b70d1704c709f9cc0f40d260a5f40 # v1.4.0
+        continue-on-error: true
+        with:
+          run: |
+            IMAGE_REGISTRY="${{ steps.get-image-data.outputs.registry }}" \
+            IMAGE_NAME="${{ steps.get-image-data.outputs.name }}" \
+            IMAGE_TAG="${{ steps.get-image-data.outputs.tag }}" \
+            mise run ci-image-scan
+
+      - name: Report vulnerabilities
+        uses: ovsds/create-or-update-unique-comment-action@df30f5f96aa71679deb9eb697c98f39ee9e26651 # v1.1.0
+        with:
+          issue-number: ${{ github.event.number }}
+          body: |
+            ## Vulnerabilities found
+            ```
+            ${{ steps.scan.outputs.stdout }}
+            ```
+          unique-body-includes: "## Vulnerabilities found"
+          delete: ${{ steps.scan.outputs.exit_code == 0 }}

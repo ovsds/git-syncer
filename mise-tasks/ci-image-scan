@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+#MISE description="Scan the IMAGE_REGISTRY/IMAGE_NAME:IMAGE_TAG image for vulnerabilities"
+#MISE env={TRIVY_DISABLE_VEX_NOTICE="true"}
+set -euo pipefail
+
+trivy image --config backend/trivy.yaml "${IMAGE_REGISTRY:?}/${IMAGE_NAME:?}:${IMAGE_TAG:?}"
