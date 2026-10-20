@@ -4,6 +4,8 @@ ARG BASE_RUNTIME_IMAGE=python:3.15.0-slim
 FROM ${BASE_BUILDER_IMAGE} AS builder
 
 RUN python -m pip install 'poetry==2.5.1'
+# The runtime venv and image ship without pip, which vendors msgpack, urllib3 and setuptools below their security fixes
+ENV POETRY_VIRTUALENVS_OPTIONS_NO_PIP=true
 
 RUN mkdir --parents /opt/app
 COPY pyproject.toml /opt/app/pyproject.toml
@@ -14,6 +16,8 @@ WORKDIR /opt/app
 RUN poetry install
 
 FROM ${BASE_RUNTIME_IMAGE} AS runtime
+
+RUN python -m pip uninstall --yes pip
 
 RUN apt-get update \
     && apt-get upgrade --yes \
