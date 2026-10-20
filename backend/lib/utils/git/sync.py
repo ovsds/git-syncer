@@ -37,10 +37,7 @@ def _is_ref_included(
         if regex.match(ref_path):
             return True
 
-    if not task.include_ref and not task.include_ref_regex:
-        return True
-
-    return False
+    return not task.include_ref and not task.include_ref_regex
 
 
 def sync_repo(task: SyncRepoTask, logger: logging_utils.AbstractLogger):

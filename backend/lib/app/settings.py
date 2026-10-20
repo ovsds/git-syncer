@@ -94,9 +94,8 @@ class Settings(pydantic_settings.BaseSettings):
         file_secret_settings: pydantic_settings.PydanticBaseSettingsSource,
     ) -> tuple[pydantic_settings.PydanticBaseSettingsSource, ...]:
         settings_file = os.environ.get("GIT_SYNCER_SETTINGS_YAML", None)
-        if settings_file:
-            if not os.path.exists(settings_file):
-                raise FileNotFoundError(f"Settings file {settings_file} does not exist")
+        if settings_file and not os.path.exists(settings_file):
+            raise FileNotFoundError(f"Settings file {settings_file} does not exist")
 
         return (
             env_settings,
